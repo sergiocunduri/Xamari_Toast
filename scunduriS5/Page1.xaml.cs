@@ -26,10 +26,31 @@ namespace scunduriS5
         }
 
         public async void obtener() {
-            var contenido = await client.GetStringAsync(Url);
-            List<scunduriS5.Datos> listPost = JsonConvert.DeserializeObject<List<scunduriS5.Datos>>(contenido);
-            post = new ObservableCollection<scunduriS5.Datos>(listPost);
-            lstEstudiantes.ItemsSource = post;
+            try
+            {
+                var contenido = await client.GetStringAsync(Url);
+                List<scunduriS5.Datos> listPost = JsonConvert.DeserializeObject<List<scunduriS5.Datos>>(contenido);
+                post = new ObservableCollection<scunduriS5.Datos>(listPost);
+                lstEstudiantes.ItemsSource = post;
+            }
+            catch (Exception ex)
+            {
+
+                DisplayAlert("Ok",ex.Message,"cerrar");
+            }
+            
+        }
+
+        private void btnInsertar_Clicked(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new Insertar());
+        }
+
+        private void lstEstudiantes_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+           var objetoEstudiante = (Datos)e.SelectedItem;
+
+            Navigation.PushAsync(new AcEliminar(objetoEstudiante));
         }
     }
 }
